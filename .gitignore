@@ -22,3 +22,14 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 /JavaIntroduction/target/
+/ReadWithJARIntro/nbproject/private/
+/ReadWithJARIntro/build/
+/TurtleIntro/nbproject/private/
+/TurtleIntro/build/
+/OlympicRings/nbproject/private/
+/OlympicRings/build/
+/MultiShapes/nbproject/private/
+/MultiShapes/build/
+/TurtleHouse/nbproject/private/
+/TurtleHouse/build/
+/InputPractice/target/
