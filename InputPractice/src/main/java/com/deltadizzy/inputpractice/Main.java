@@ -13,34 +13,24 @@ import java.util.Scanner;
  * @author DeltaDizzy
  */
 public class Main {
-
     
-    public enum Choices {
-        DRINK,
-        WARM_UP,
-        WALK,
-        RUN,
-        STATUS,
-        WAIT
-    }
     static Random rng = new Random();
-    static int distanceToEnd = 200;
-    static int distanceToEnemy = 15;
+    static int distanceToEnd = 150;
+    static int distanceToEnemy = 30;
     static int enemySpeed = 0;
-    static int drinks = 6;
-    static int fuelMiles = 25;
+    static int fuelMiles = 50;
     static Boolean playing = true;
     static Scanner scan = new Scanner(System.in);
     static String text = "";
     static int eventChance = 0;
-    static String instructions = "Welcome to ESCAPE! You are a spy who has just stolen"
+    static String instructions = "\n\n\n\nWelcome to ESCAPE! You are a spy who has just stolen"
             + "top secret plans from The Enemy.\nThey have sent a band of agents"
             + " after you and you ened to make it to the other side of the Frozen"
             + " Desert to reach the Extraction Point and ESCAPE.\nAlong the way "
             + "there are various safehouses at which you can rest, resupply,"
             + " warm up, and refuel your vehicle.\nBe careful about any fellow travellers or settlements "
             + "you find, The Enemy has informers everywhere.";
-    static String choices = "What will you do next?\nA. Drink\nB. Wait here\nC. Drive Slowly\nD. Drive at maximum speed\nE. Status";
+    static String choices = "What will you do next?\nA. Wait here\nV. Drive Slowly\nC. Drive at maximum speed\nD. Status";
     public static void main(String[] args) {
         
         
@@ -71,24 +61,20 @@ public class Main {
             // player choices
             switch(text) {
                 case "A":
-                    drinks--;
-                    break;
-                case "B":
                     print("You decide to take a break.");
                     distanceToEnemy-=enemySpeed;
                     break;
-                case "C":
-                    distanceToEnd-=14;
-                    distanceToEnemy-=(enemySpeed-14);
-                    fuelMiles-=14;
+                case "B":
+                    distanceToEnd-=10;
+                    distanceToEnemy-=(enemySpeed-10);
+                    fuelMiles-=10;
                     break;
-                case "D":
+                case "C":
                     distanceToEnd-=20;
                     distanceToEnemy-=(enemySpeed-20);
                     fuelMiles-=20;
                     break;
-                case "E":
-                    print(String.format("Drinks Remaining: %d\n", drinks));
+                case "D":
                     print(String.format("Miles of Fuel Remaining: %d\n", fuelMiles));
                     print(String.format("The Enemy Agents are %d miles behind you.", distanceToEnemy));
                     print(String.format("You are %d miles from the extraction point.", distanceToEnd));
@@ -99,6 +85,17 @@ public class Main {
             
             if (distanceToEnd <= 0) {
                 print("You reached the Extraction Point and escaped the Enemy with the secret plans! Good job, Agent.");
+                System.exit(0);
+            }
+            
+            if (distanceToEnemy<=0) {
+                print("The enemy caught up with you! 'Say goodbye to those secret plans! (and your head ;) )'");
+                
+            }
+            
+            if (fuelMiles <= 0) {
+                print("You ran out of fuel! Here they come...");
+                distanceToEnemy=0;
             }
             
             // Events
@@ -107,8 +104,7 @@ public class Main {
             eventChance = randomWithBounds(0,101);
             
             if (between(eventChance,75,91)) { // safehouse, 75-90
-                print("You found a hidden safehouse! You refill your water supplies and refuel your snowmobile.");
-                drinks=6;
+                print("You found a hidden safehouse! You refuel your snowmobile.");
                 fuelMiles=25;
                 distanceToEnemy-=enemySpeed;
             } else if (between(eventChance,90,101)) { // settlement, 90-100
@@ -118,8 +114,38 @@ public class Main {
                 switch(text) {
                     case "A":
                         eventChance=randomWithBounds(1,101);
-                        if (between(eventChance, )) {
-                            
+                        if (between(eventChance, 74,101)) {
+                            print("You got caught by an enemy spy! You can try to sneak out (A), hope the townspeople rescue you (B), or give up (C).");
+                            text=scan.nextLine().toUpperCase();
+                            switch(text) {
+                                case "A":
+                                    distanceToEnemy-=10;
+                                    eventChance=randomWithBounds(1,101);
+                                    if (between(eventChance, 0, 16)) {
+                                        print("You escaped! But beware, the Agents are gaining fast.");
+                                        distanceToEnemy-=15;
+                                    } else {
+                                        print("You failed to escape! You really should have studied more magic tricks.");
+                                        distanceToEnemy=0;
+                                    }
+                                    break;
+                                case "B":
+                                    eventChance=randomWithBounds(1,101);
+                                    if (between(eventChance, 16, 41)) {
+                                        print("The townspeople helped you escape! They refuel your snowmobile and promise to delay the agents as much as possible while you get away.");
+                                        fuelMiles = 45;
+                                        distanceToEnemy+=20;
+                                    } else {
+                                        print("They never came to help!");
+                                        distanceToEnemy=0;
+                                    }
+                                    break;
+                                case "C":
+                                    distanceToEnemy=0;
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
                         break;
                     case "B":
