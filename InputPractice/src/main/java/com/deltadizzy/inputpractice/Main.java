@@ -30,7 +30,7 @@ public class Main {
             + "there are various safehouses at which you can rest, resupply,"
             + " warm up, and refuel your vehicle.\nBe careful about any fellow travellers or settlements "
             + "you find, The Enemy has informers everywhere.";
-    static String choices = "What will you do next?\nA. Wait here\nV. Drive Slowly\nC. Drive at maximum speed\nD. Status";
+    static String choices = "What will you do next?\nA. Wait here\nB. Drive Slowly\nC. Drive at maximum speed\nD. Status";
     public static void main(String[] args) {
         
         
@@ -55,6 +55,23 @@ public class Main {
         * roll events
         */
         while(playing == true) {
+            print(String.format("Miles of Fuel Remaining: %d", fuelMiles));
+            print(String.format("The Enemy Agents are %d miles behind you.", distanceToEnemy));
+            print(String.format("You are %d miles from the extraction point.", distanceToEnd));
+            if (distanceToEnd <= 0) {
+                print("You reached the Extraction Point and escaped the Enemy with the secret plans! Good job, Agent.");
+                System.exit(0);
+            }
+            
+            if (distanceToEnemy<=0) {
+                print("The enemy caught up with you! 'Say goodbye to those secret plans! (and your head ;) )'");
+                System.exit(0);
+            }
+            
+            if (fuelMiles <= 0) {
+                print("You ran out of fuel! Here they come...");
+                distanceToEnemy=0;
+            }
             print(choices);
             text = scan.nextLine().toUpperCase();
             enemySpeed = randomWithBounds(0,15);
@@ -79,33 +96,22 @@ public class Main {
                     print(String.format("The Enemy Agents are %d miles behind you.", distanceToEnemy));
                     print(String.format("You are %d miles from the extraction point.", distanceToEnd));
                     break;
+                case "F":
+                    fuelMiles+=20;
                 default:
                     break;
             }
             
-            if (distanceToEnd <= 0) {
-                print("You reached the Extraction Point and escaped the Enemy with the secret plans! Good job, Agent.");
-                System.exit(0);
-            }
             
-            if (distanceToEnemy<=0) {
-                print("The enemy caught up with you! 'Say goodbye to those secret plans! (and your head ;) )'");
-                
-            }
-            
-            if (fuelMiles <= 0) {
-                print("You ran out of fuel! Here they come...");
-                distanceToEnemy=0;
-            }
             
             // Events
             // safehouse = 15%
             // settlement - 10%
             eventChance = randomWithBounds(0,101);
             
-            if (between(eventChance,75,91)) { // safehouse, 75-90
+            if (between(eventChance,69,91)) { // safehouse, 75-90
                 print("You found a hidden safehouse! You refuel your snowmobile.");
-                fuelMiles=25;
+                fuelMiles+=25;
                 distanceToEnemy-=enemySpeed;
             } else if (between(eventChance,90,101)) { // settlement, 90-100
                 print("You found a town! You can head into town and restock at the risk of being spotted by enemy informers or you can continue pushing on with what you have.");
@@ -133,7 +139,7 @@ public class Main {
                                     eventChance=randomWithBounds(1,101);
                                     if (between(eventChance, 16, 41)) {
                                         print("The townspeople helped you escape! They refuel your snowmobile and promise to delay the agents as much as possible while you get away.");
-                                        fuelMiles = 45;
+                                        fuelMiles+=35;
                                         distanceToEnemy+=20;
                                     } else {
                                         print("They never came to help!");
@@ -146,6 +152,9 @@ public class Main {
                                 default:
                                     break;
                             }
+                        } else {
+                            print("You made it out with extra fuel!");
+                            fuelMiles+=30;
                         }
                         break;
                     case "B":
@@ -154,9 +163,6 @@ public class Main {
                         break;
                 }
             }
-            
-            
-            print(String.format("The Enemy' agents are %d miles behind you.", distanceToEnemy));
         }
     }
     
@@ -174,6 +180,13 @@ public class Main {
         return rng.nextInt(upperBound-lowerBound)+lowerBound;
     }
     
+    /**
+     * 
+     * @param value The field to check the value of
+     * @param first The value that `value` must be greater than
+     * @param second The value that `value` must be less than
+     * @return Whether `value` is between `first` and `second` 
+     */
     public static boolean between(int value, int first, int second) {
         return value > first && value < second;
     }
