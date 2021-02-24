@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes","u":"allclasses-index.html"},{"p":"paycalc.gui","l":"MainWindow"},{"p":"paycalc","l":"PayCalc"}];updateSearchResults();
