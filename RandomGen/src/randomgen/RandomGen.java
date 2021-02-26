@@ -29,11 +29,7 @@ public class RandomGen {
         }
         Collections.sort(al);   
         mode = mode(al.stream().mapToInt(i -> i).toArray());
-        System.out.println(String.format("""
-                                         The mode of the dataset is:
-                                         %d
-                                         
-                                         It occurred %d times.""", mode, modeFreq));
+        ystem.out.println(String.format("The mode of the dataset is:\n" + "%d\n" + "\n" + "It occurred %d times.", mode, modeFreq));
     }
     
     /**
